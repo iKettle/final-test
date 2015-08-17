@@ -9,6 +9,7 @@ import pages.ComputersNotebooksPage;
 import pages.RozetkaStartPage;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -46,11 +47,16 @@ public class CompareNotebooksTest extends TestBase{
 
         allNotebooksPage.selectManufacture(manufacture);
 
-        assertTrue(driver.getTitle().contains(manufacture), "title = " + driver.getTitle()+"manufacture = " + manufacture);
+        assertTrue(driver.getTitle().contains(manufacture));
 
         AppleNotebooks appleNotebooks = new AppleNotebooks();
 
         appleNotebooks.sortNotebooks("от дорогих к дешевым");
+
+
+        
+
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 
     }
 

@@ -10,9 +10,9 @@ public class AppleNotebooks extends TestBase{
 
     public void sortNotebooks(String sortBy){
 
-        driver.findElement(By.id("sort-view")).click();
+        //driver.findElement(By.id("sort-view")).click();
 
-        //driver.findElement(By.xpath("//*[@id='sort_view']//*[@name = 'drop_link']")).click();
+        driver.findElement(By.xpath("//*[@id='sort_view']//a")).click();
 
         String path = String.format("//a[contains(text(),'%s')]", sortBy);
         driver.findElement(By.xpath(path)).click();
