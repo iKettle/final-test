@@ -3,61 +3,55 @@ package ui_test;
 import core.TestBase;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
-import pages.AllNotebooksPage;
-import pages.AppleNotebooks;
+import pages.CompareNotebooksPage;
 import pages.ComputersNotebooksPage;
+import pages.NotebooksPage;
 import pages.RozetkaStartPage;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-/**
- * Created by me.kettle on 15.08.2015.
- */
-public class CompareNotebooksTest extends TestBase{
+public class CompareNotebooksTest extends TestBase {
 
-    public String webSite = "http://rozetka.com.ua/";
-    public String manufacture = "Apple";
-    public String notebook1 = "Apple MacBook Pro Retina 13\" (Z0QP000X6)";
-    public String notebook2 = "Apple MacBook Pro Retina 15\" (MGXA2UA/A)";
+    public final static String SITE_URL = "http://rozetka.com.ua/";
+    public final static String NOTEBOOK_1 = "Apple MacBook Pro Retina 13\" (Z0QP000X6)";
+    public final static String NOTEBOOK_2 = "Apple MacBook Pro Retina 15\" (MGXA2UA/A)";
 
     @Test
-    public void compareNotebooksTest(){
-        RozetkaStartPage rozetkaStartPage = new RozetkaStartPage();
+    public void compareNotebooksTest() {
+        RozetkaStartPage rozetkaStartPage = new RozetkaStartPage(getDriver());
+        rozetkaStartPage.open(SITE_URL);
+        assertTrue(getDriver().getCurrentUrl().equals(SITE_URL));
+        rozetkaStartPage.selectItemFromCatalog("Ноутбуки, планшеты и компьютеры");
 
-        rozetkaStartPage.open(webSite);
-        assertTrue(driver.getCurrentUrl().equals(webSite));
+        ComputersNotebooksPage computersNotebooksPage = new ComputersNotebooksPage(getDriver());
+        List<WebElement> categories = computersNotebooksPage.getSubcategoryList("Ноутбуки");
+        assertTrue(categories.size() == 6);
+        computersNotebooksPage.selectSubcategory("Ноутбуки", "Все ноутбук");
 
-        rozetkaStartPage.selectNotebookItem();
-
-        ComputersNotebooksPage computersNotebooksPage = new ComputersNotebooksPage();
-
-        List<WebElement> categories = computersNotebooksPage.allNotebooksCategory();
-
-        assertTrue(categories.size()== 6);
-        computersNotebooksPage.selectCategory("Все ноутбуки");
-
-        AllNotebooksPage allNotebooksPage = new AllNotebooksPage();
-        List<WebElement> listOfManufactures = allNotebooksPage.findAllManufactures();
-
+        NotebooksPage notebooksPage = new NotebooksPage(getDriver());
+        List<WebElement> listOfManufactures = notebooksPage.findAllFilterItems("Производители");
         assertEquals(listOfManufactures.size(), 9);
+        notebooksPage.filterItems("Производители", "Apple");
 
-        allNotebooksPage.selectManufacture(manufacture);
+        assertTrue(getDriver().getTitle().contains("Apple"));
 
-        assertTrue(driver.getTitle().contains(manufacture));
+        notebooksPage.sortNotebooks("от дорогих к дешевым");
 
-        AppleNotebooks appleNotebooks = new AppleNotebooks();
+        assertTrue(notebooksPage.itemIsDisplayed(NOTEBOOK_1));
+        notebooksPage.addToCompareList(NOTEBOOK_1);
+        assertTrue(notebooksPage.checkItemIsPresentInCompareList(NOTEBOOK_1));
+        assertTrue(notebooksPage.itemIsDisplayed(NOTEBOOK_2));
+        notebooksPage.addToCompareList(NOTEBOOK_2);
+        assertTrue(notebooksPage.checkItemIsPresentInCompareList(NOTEBOOK_1));
+        assertTrue(notebooksPage.checkItemIsPresentInCompareList(NOTEBOOK_2));
 
-        appleNotebooks.sortNotebooks("от дорогих к дешевым");
+        CompareNotebooksPage compareNotebooksPage = notebooksPage.openCompareList();
 
-
-        
-
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-
+        assertTrue(compareNotebooksPage.checkIsPresentInComparePage(NOTEBOOK_1));
+        assertTrue(compareNotebooksPage.checkIsPresentInComparePage(NOTEBOOK_2));
     }
 
 }

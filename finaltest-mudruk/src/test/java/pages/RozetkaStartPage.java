@@ -1,21 +1,18 @@
 package pages;
 
-import core.TestBase;
+import core.BasePage;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-/**
- * Created by me.kettle on 15.08.2015.
- */
-public class RozetkaStartPage extends TestBase {
-    public WebElement notebooks;
+public class RozetkaStartPage extends BasePage {
 
-    public void open(String URL){
-        driver.get(URL);
+    public RozetkaStartPage(WebDriver driver) {
+        super(driver);
     }
 
-    public void selectNotebookItem(){
-        notebooks = driver.findElement(By.linkText("Ноутбуки, планшеты и компьютеры"));
+    public void selectItemFromCatalog(String itemName) {
+        WebElement notebooks = getDriver().findElement(By.linkText(itemName));
         notebooks.click();
     }
 }

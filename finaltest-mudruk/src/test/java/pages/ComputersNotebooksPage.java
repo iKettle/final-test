@@ -1,37 +1,28 @@
 package pages;
 
-import core.TestBase;
+import core.BasePage;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
-/**
- * Created by me.kettle on 15.08.2015.
- */
-public class ComputersNotebooksPage extends TestBase{
-    public static final String CATEGORY_LOCATOR_PATTERN = "//div[@class = 'pab-cell pab-img-150'][descendant::a[contains(text(), 'Ноутбуки')]]//li//a";
+public class ComputersNotebooksPage extends BasePage {
+    public static final String CATEGORY_LOCATOR = "//div[@class = 'pab-cell pab-img-150'][descendant::a[contains(text(), '%s')]]//li//a";
+    public static final String CATEGORY_LINK_PATTERN = "//div[@class = 'pab-cell pab-img-150'][descendant::a[contains(text(), '%s')]]//li" +
+            "//*[contains(text(), '%s')]";
 
-    public List<WebElement> allNotebooksCategory(){
-
-        List<WebElement> notebookCategory = driver.findElements(By.xpath(CATEGORY_LOCATOR_PATTERN));
-
-        return notebookCategory;
-
+    public ComputersNotebooksPage(WebDriver driver) {
+        super(driver);
     }
 
-    public void selectCategory(String category){
+    public List<WebElement> getSubcategoryList(String categoryName) {
+        String categoryLocator = String.format(CATEGORY_LOCATOR, categoryName);
+        return getDriver().findElements(By.xpath(categoryLocator));
+    }
 
-        List<WebElement> notebooksCategory = allNotebooksCategory();
-
-        for(WebElement cat : notebooksCategory){
-            if (cat.getText().contains(category)){
-                //driver.findElement(By.xpath("//div[@class = 'pab-cell pab-img-150'][descendant::a[contains(text(), 'Ноутбуки')]]//li/a/span[contains(text(), 'Все ноутбуки')]/..")).click();
-                cat.click();
-                break;
-
-            }
-        }
-
+    public void selectSubcategory(String categoryName, String subcategoryName) {
+        String subcategoryLocator = String.format(CATEGORY_LINK_PATTERN, categoryName, subcategoryName);
+        getDriver().findElement(By.xpath(subcategoryLocator)).click();
     }
 }
