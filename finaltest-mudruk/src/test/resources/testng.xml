@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Suite1" verbose="1" >
+    <parameter name="COUNT" value="31" />
+
+    <test name="CompareNotebook" >
+        <classes>
+            <class name="ui_test.CompareNotebooksTest" />
+        </classes>
+    </test>
+</suite>
